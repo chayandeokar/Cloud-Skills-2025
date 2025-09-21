@@ -80,11 +80,11 @@ export REGION=$(gcloud compute project-info describe \
 
 # Step 2: Sourcing setup script...
 echo "${MAGENTA}${BOLD}Sourcing setup script...${RESET}"
-source <(gsutil cat gs://cloud-training/gsp318/marking/setup_marking_v2.sh)
+source <(gsutil cat gs://cloud-training/gsp3188/marking/setup_marking_v2.sh)
 
 # Step 3: Downloading and extracting application...
 echo "${GREEN}${BOLD}Downloading and extracting application...${RESET}"
-gsutil cp gs://spls/gsp318/valkyrie-app.tgz .
+gsutil cp gs://spls/gsp3188/valkyrie-app.tgz .
 tar -xzf valkyrie-app.tgz
 cd valkyrie-app
 
