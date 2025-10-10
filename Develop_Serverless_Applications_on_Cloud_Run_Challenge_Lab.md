@@ -48,5 +48,5 @@ gcloud iam service-accounts create $FRONTEND_SERVICE_ACCOUNT --display-name "Bil
 cd ~/pet-theory/lab07/prod-frontend-billing
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1
 gcloud run deploy $FRONTEND_PRODUCTION_SERVICE --image gcr.io/$PROJECT_ID/frontend-prod:0.1 --quiet
-```###  Set the Environment Variables in CloudShell ###
+
 
