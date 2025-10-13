@@ -46,11 +46,25 @@ WHERE country_name="Italy" AND date BETWEEN 'YYYY-MM-DD' and 'YYYY-MM-DD'
 ### Task 5. Identifying specific day
 
 ```
-SELECT date
-FROM `bigquery-public-data.covid19_open_data.covid19_open_data`
-WHERE country_name="Italy" and cumulative_deceased>DEATH
-ORDER BY date asc
-LIMIT 1
+SELECT
+  DATE(date) AS date
+FROM (
+  SELECT
+    date,
+    SUM(cumulative_deceased) AS total_deaths
+  FROM
+    `bigquery-public-data.covid19_open_data.covid19_open_data`
+  WHERE
+    country_name = 'Italy'
+    AND date >= '2020-01-01'
+  GROUP BY
+    date
+)
+WHERE
+  total_deaths > 10000
+ORDER BY
+  date ASC
+LIMIT 1; 
 ```
 ### Task 6. Finding days with zero net new cases
 
