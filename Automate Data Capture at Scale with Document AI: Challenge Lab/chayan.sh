@@ -1,115 +1,110 @@
+# Set text styles
+YELLOW=$(tput setaf 3)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+echo "Please set the below values correctly"
+read -p "${YELLOW}${BOLD}Enter the REGION: ${RESET}" REGION
+read -p "${YELLOW}${BOLD}Enter the PROCESSOR: ${RESET}" PROCESSOR
+
+# Export variables after collecting input
+export REGION PROCESSOR
 
 
-echo ""
-echo ""
-echo "Please export the values."
+gcloud auth list
 
-
-# Prompt user to input three regions
-read -p "Enter PROCESSOR_NAME: " PROCESSOR_NAME
-read -p "Enter REGION: " REGION
-
-
-
-#TASK 1
-export BUCKET_LOCATION=$REGION
 export PROJECT_ID=$(gcloud config get-value core/project)
 
-gcloud services enable documentai.googleapis.com      
-gcloud services enable cloudfunctions.googleapis.com  
-gcloud services enable cloudbuild.googleapis.com    
-gcloud services enable geocoding-backend.googleapis.com 
-gcloud services enable eventarc.googleapis.com
-gcloud services enable run.googleapis.com
+gcloud services enable documentai.googleapis.com --project $DEVSHELL_PROJECT_ID
+
+sleep 10
+
 
 mkdir ./document-ai-challenge
 gsutil -m cp -r gs://spls/gsp367/* \
-~/document-ai-challenge/
+  ~/document-ai-challenge/
 
-#TASK 2
 
-ACCESS_TOKEN=$(gcloud auth application-default print-access-token)
+ACCESS_CP=$(gcloud auth application-default print-access-token)
 
 curl -X POST \
-  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Authorization: Bearer $ACCESS_CP" \
   -H "Content-Type: application/json" \
   -d '{
-    "display_name": "'"$PROCESSOR_NAME"'",
+    "display_name": "'"$PROCESSOR"'",
     "type": "FORM_PARSER_PROCESSOR"
   }' \
   "https://documentai.googleapis.com/v1/projects/$PROJECT_ID/locations/us/processors"
 
 
-gsutil mb -c standard -l ${BUCKET_LOCATION} -b on \
- gs://${PROJECT_ID}-input-invoices
-gsutil mb -c standard -l ${BUCKET_LOCATION} -b on \
- gs://${PROJECT_ID}-output-invoices
-gsutil mb -c standard -l ${BUCKET_LOCATION} -b on \
- gs://${PROJECT_ID}-archived-invoices
+gsutil mb -c standard -l $REGION -b on gs://$PROJECT_ID-input-invoices
+
+gsutil mb -c standard -l $REGION -b on gs://$PROJECT_ID-output-invoices
+
+gsutil mb -c standard -l $REGION -b on gs://$PROJECT_ID-archived-invoices
 
 
-#TASK 3
-#Create a BigQuery dataset and tables
+bq --location=US mk  -d \
+ --description "Form Parser Results" \
+ ${PROJECT_ID}:invoice_parser_results
+ 
+cd ~/document-ai-challenge/scripts/table-schema
 
-bq --location="US" mk  -d \
-    --description "Form Parser Results" \
-    ${PROJECT_ID}:invoice_parser_results
-cd ~/documentai-pipeline-demo/scripts/table-schema/
 bq mk --table \
 invoice_parser_results.doc_ai_extracted_entities \
 doc_ai_extracted_entities.json
-bq mk --table \
-invoice_parser_results.geocode_details \
-geocode_details.json
 
 
-#TASK 4
+cd ~/document-ai-challenge/scripts
 
+PROJECT_ID=$(gcloud config get-value project)
+PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$PROJECT_ID" --format='value(project_number)')
 
-cd ~/document-ai-challenge/scripts 
-
-export PROJECT_ID=$(gcloud config get-value core/project)
-PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+SERVICE_ACCOUNT=$(gcloud storage service-agent --project=$PROJECT_ID)
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
-  --role="roles/artifactregistry.reader"
+  --member serviceAccount:$SERVICE_ACCOUNT \
+  --role roles/pubsub.publisher
+
 
 export CLOUD_FUNCTION_LOCATION=$REGION
 
-sleep 20
+echo $CLOUD_FUNCTION_LOCATION
+
+sleep 30
+
+#!/bin/bash
 
 deploy_function() {
-gcloud functions deploy process-invoices \
-
---region=${CLOUD_FUNCTION_LOCATION} \
---gen2 \
---entry-point=process_invoice \
---runtime=python39 \
---service-account=${PROJECT_ID}@appspot.gserviceaccount.com \
---source=cloud-functions/process-invoices \
---timeout=400 \
---env-vars-file=cloud-functions/process-invoices/.env.yaml \
---trigger-resource=gs://${PROJECT_ID}-input-invoices \
---trigger-event=google.storage.object.finalize \
---service-account $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
---allow-unauthenticated
+  gcloud functions deploy process-invoices \
+  --gen2 \
+  --region=${CLOUD_FUNCTION_LOCATION} \
+  --entry-point=process_invoice \
+  --runtime=python39 \
+  --service-account=${PROJECT_ID}@appspot.gserviceaccount.com \
+  --source=cloud-functions/process-invoices \
+  --timeout=400 \
+  --env-vars-file=cloud-functions/process-invoices/.env.yaml \
+  --trigger-resource=gs://${PROJECT_ID}-input-invoices \
+  --trigger-event=google.storage.object.finalize \
+  --service-account $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
+  --allow-unauthenticated
 }
 
 deploy_success=false
 
 while [ "$deploy_success" = false ]; do
   if deploy_function; then
-    echo "Function deployed successfully"
-    deploy_success=true
+    echo "Function deployed successfully.. Welcome to Dr Abhishek Cloud Tutorials"
+    echo "Subscribe to Dr Abhishek: https://www.youtube.com/@drabhishek.5460/videos"
+  deploy_success=true
   else
-    echo "Deployment Retrying"
+    echo "Deployment Retrying, please subscribe to Dr Abhishek: https://www.youtube.com/@drabhishek.5460/videos"
     sleep 10
   fi
 done
 
 
-# Run the curl command and use grep and sed to extract the processor ID
 PROCESSOR_ID=$(curl -X GET \
   -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
   -H "Content-Type: application/json" \
@@ -117,27 +112,28 @@ PROCESSOR_ID=$(curl -X GET \
   grep '"name":' | \
   sed -E 's/.*"name": "projects\/[0-9]+\/locations\/us\/processors\/([^"]+)".*/\1/')
 
-# Export the variable
-export PROCESSOR_ID
 
+export PROCESSOR_ID
+echo $PROCESSOR_ID
+
+export CLOUD_FUNCTION_LOCATION=$REGION
+echo $CLOUD_FUNCTION_LOCATION
+
+export PROJECT_ID=$(gcloud config get-value core/project)
+echo $PROJECT_ID
 
 gcloud functions deploy process-invoices \
---region=${CLOUD_FUNCTION_LOCATION} \
---gen2 \
---entry-point=process_invoice \
---runtime=python39 \
---service-account=${PROJECT_ID}@appspot.gserviceaccount.com \
---source=cloud-functions/process-invoices \
---timeout=400 \
---env-vars-file=cloud-functions/process-invoices/.env.yaml \
---trigger-resource=gs://${PROJECT_ID}-input-invoices \
---trigger-event=google.storage.object.finalize \
---service-account $PROJECT_NUMBER-compute@developer.gserviceaccount.com \
---allow-unauthenticated
-
-
-
-#Task 5. Test and validate the end-to-end solution
+  --gen2 \
+  --region=${CLOUD_FUNCTION_LOCATION} \
+  --entry-point=process_invoice \
+  --runtime=python39 \
+  --service-account=${PROJECT_ID}@appspot.gserviceaccount.com \
+  --source=cloud-functions/process-invoices \
+  --timeout=400 \
+  --trigger-resource=gs://${PROJECT_ID}-input-invoices \
+  --trigger-event=google.storage.object.finalize \
+  --update-env-vars=PROCESSOR_ID=${PROCESSOR_ID},PARSER_LOCATION=us,PROJECT_ID=${PROJECT_ID} \
+  --service-account=$PROJECT_NUMBER-compute@developer.gserviceaccount.com
 
 
 export PROJECT_ID=$(gcloud config get-value core/project)
