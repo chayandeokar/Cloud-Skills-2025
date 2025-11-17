@@ -446,7 +446,7 @@ explore: events {
 }
 
 explore: +order_items {
-  query: Drabhishek1 {
+  query: chayan-1 {
     dimensions: [dynamic_timeframe]
     measures: [order_count]
     filters: [order_items.select_timeframe: "created^_month"]
@@ -455,7 +455,7 @@ explore: +order_items {
 
 
 explore: +order_items {
-  query: Drabhishek2 {
+  query: chayan-2 {
     dimensions: [products.category_comparison]
     measures: [order_count]
     filters: [products.select_category: "Jeans"]
@@ -465,7 +465,7 @@ explore: +order_items {
 
 
 explore: +order_items {
-  query: Drabhishek3 {
+  query: chayan-3 {
     dimensions: [users.country]
     measures: [users.dynamic_count]
     filters: [users.select_traffic_source: "Email"]
