@@ -9,11 +9,11 @@ export INTERVAL=
 export SERVICE_NAME=
 ```
 ```
-curl -LO raw.githubusercontent.com/Cloud-Wala-Banda/Labs-Solutions/main/Manage%20Kubernetes%20in%20Google%20Cloud%20Challenge%20Lab/gsp510.sh
+curl -LO https://raw.githubusercontent.com/chayandeokar/Cloud-Skills-2025/refs/heads/master/Manage%20Kubernetes%20in%20Google%20Cloud%20Challenge%20Lab%20/chayan.sh
 
-sudo chmod +x gsp510.sh
+sudo chmod +x chayan.sh
 
-./gsp510.sh
+./chayan.sh
 ```
 
 ### Congratulations 🎉 for completing the Lab !
