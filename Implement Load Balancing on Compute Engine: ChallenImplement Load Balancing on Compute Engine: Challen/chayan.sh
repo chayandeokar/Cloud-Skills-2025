@@ -36,8 +36,6 @@ PROJECT_ID=$(gcloud config get-value project)
 echo "${GREEN_TEXT}${BOLD_TEXT}Using Zone: $ZONE${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}Using Region: $REGION${RESET_FORMAT}"
 echo
-echo "${RED_TEXT}${BOLD_TEXT}Tech & Code - https://www.youtube.com/@TechCode9${RESET_FORMAT}"
-echo
 
 # ---------------- Task 1: Create Web Servers -------------------
 echo "${YELLOW_TEXT}${BOLD_TEXT}Creating web1, web2, web3...${RESET_FORMAT}"
