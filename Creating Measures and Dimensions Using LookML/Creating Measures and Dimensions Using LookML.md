@@ -1,6 +1,5 @@
----
-`user.view` File:
----
+
+cREATE `user.view` File:
 
 ```loolml
 view: users {
