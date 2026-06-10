@@ -10,13 +10,13 @@ gcloud compute ssh lab-vm
 # ----------------------------
 export API_KEY=""
 
-tts_response_file=""
-speech_request_json=""
-speech_response_json=""
-translate_input_text=""
-translate_output_file=""
-detect_input_text=""
-detect_output_file=""
+export tts_response_file=""
+export speech_request_json=""
+export speech_response_json=""
+export translate_input_text=""
+export translate_output_file=""
+export detect_input_text=""
+export detect_output_file=""
 
 # Get current project ID
 export PROJECT_ID=$(gcloud config get-value project)
