@@ -92,7 +92,7 @@ Comments
 
 2. Select `App` > `Blank app`.
 
-3. For `App name`, type `cloudwalabanda` to name your app.
+3. For `App name`, type `chayandeokar` to name your app.
 
 4. For `Category`, select `Education & Training` from the list.
 
