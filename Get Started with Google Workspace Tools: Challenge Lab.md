@@ -4,9 +4,9 @@
 
 2. In the `General` tab, scroll down to the `Signature` section and click `Create New`.
 
-3. Give this signature `cloudwalabanda` name, then click `Create`.
+3. Give this signature `chayandeokar` name, then click `Create`.
 
-4. In the Signature defaults section, use the dropdown menu under `For New Emails Use` and select `cloudwalabanda`.
+4. In the Signature defaults section, use the dropdown menu under `For New Emails Use` and select `chayandeokar`.
 
 * Paste the following
 
