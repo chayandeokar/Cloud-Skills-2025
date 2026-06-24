@@ -1,5 +1,5 @@
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Implement%20Regional%20Internal%20Proxy%20NLB/drabhishek.sh
-sudo chmod +x drabhishek.sh
-./drabhishek.sh
+curl -LO https://raw.githubusercontent.com/chayandeokar/Cloud-Skills-2025/refs/heads/master/Implement%20Regional%20Internal%20Proxy%20NLB/chayan.sh
+sudo chmod +x chayan.sh
+./chayan.sh
 ```
