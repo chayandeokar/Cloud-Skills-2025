@@ -1,0 +1,24 @@
+gcloud services enable securitycenter.googleapis.com & spinner
+
+while true; do
+  SERVICE_STATUS=$(gcloud services list --enabled | grep "securitycenter.googleapis.com")
+  if [ -n "$SERVICE_STATUS" ]; then
+    break
+  fi
+  sleep 2
+done
+
+gcloud scc muteconfigs create mute-flowlogs-findings \
+  --project=$DEVSHELL_PROJECT_ID \
+  --description="Mute rule for VPC Flow Logs" \
+  --filter="category=\"FLOW_LOGS_DISABLED\"" &
+spinner
+
+gcloud compute networks create scc-lab-net --subnet-mode=auto &
+spinner
+
+gcloud compute firewall-rules update default-allow-rdp --source-ranges=35.235.240.0/20 &
+spinner
+
+gcloud compute firewall-rules update default-allow-ssh --source-ranges=35.235.240.0/20 &
+spinner
