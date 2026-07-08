@@ -26,8 +26,7 @@ curl -s -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" \
      "https://storage.googleapis.com/storage/v1/b?project=$DEVSHELL_PROJECT_ID"
 
 
-curl -s -LO https://github.com/Itsabhishek7py/GoogleCloudSkillsboost/blob/9cf40ec8a380bbe71712daeb0a172d8844a2787f/Use%20APIs%20to%20Work%20with%20Cloud%20Storage%3A%20Challenge%20Lab/world.jpeg
-
+curl -s -LO https://github.com/chayandeokar/Cloud-Skills-2025/blob/master/Use%20APIs%20to%20Work%20with%20Cloud%20Storage%3A%20Challenge%20Lab/world.jpeg
 
 curl -s -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" \
      -H "Content-Type: image/jpeg" \
