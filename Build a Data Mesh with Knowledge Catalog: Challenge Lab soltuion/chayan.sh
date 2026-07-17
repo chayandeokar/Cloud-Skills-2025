@@ -54,7 +54,7 @@ gcloud dataplex assets create customer-orders \
 
 Complete Task 2 Manually 
 
-
+read -p "Enter User 2 email: " USER_2
 
 gcloud dataplex assets add-iam-policy-binding customer-engagements \
   --lake=sales-lake \
