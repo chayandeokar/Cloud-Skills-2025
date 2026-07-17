@@ -22,20 +22,12 @@ def deidentify_with_replace_infotype(
 ) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing it with the info type.
-    Args:
-        project: The Google Cloud project id to use as a parent resource.
-        item: The string to deidentify (will be treated as text).
-        info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API.
-    Returns:
-        None; the response from the API is printed to the terminal.
     """
-
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = f"projects/{PROJECT_ID}"
+    parent = f"projects/{project}"
 
     # Construct inspect configuration dictionary
     inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
@@ -62,21 +54,24 @@ def deidentify_with_replace_infotype(
     return_payload = response.item.value
     
     # Add conditional return to block responses containing US Vehicle Identification Numbers (VIN)
-    info_types = ["DOCUMENT_TYPE/R&D/SOURCE_CODE"]
-    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
+    # We add US_VEHICLE_IDENTIFICATION_NUMBER to the inspection list
+    check_types = ["DOCUMENT_TYPE/R&D/SOURCE_CODE", "US_VEHICLE_IDENTIFICATION_NUMBER"]
+    inspect_config_block = {"info_types": [{"name": t} for t in check_types]}
 
-    response = dlp.inspect_content(
+    response_inspect = dlp.inspect_content(
         request={
             "parent": parent,
-            "inspect_config": inspect_config,
+            "inspect_config": inspect_config_block,
             "item": {"value": item},
         }
     )
 
-    if response.result.findings:
-        for finding in response.result.findings:
+    if response_inspect.result.findings:
+        for finding in response_inspect.result.findings:
             if finding.info_type.name == "DOCUMENT_TYPE/R&D/SOURCE_CODE":
                 return_payload = '[Blocked due to category: Source Code]'
+            elif finding.info_type.name == "US_VEHICLE_IDENTIFICATION_NUMBER":
+                return_payload = '[Blocked due to category: US VIN]'
                 
     # Print results
     print(return_payload)
@@ -84,37 +79,31 @@ def deidentify_with_replace_infotype(
 ```
 
 ```
-# Create prompt that generates an example response with US Vehicle Identification Number (VIN)
 prompt = "Is 4Y1SL65848Z411439 an example of a US Vehicle Identification Number (VIN)?"
 
-# Run model with prompt
-# Name the output as response_vin
-response_vin = model.generate_content(prompt)
+# Run model with prompt setting the temperature to 0
+from google.genai import types
+response_vin = client.models.generate_content(
+    model=model,
+    contents=prompt,
+    config=types.GenerateContentConfig(
+        temperature=0.0,
+    ),
+)
 
-# Print response without blocking it (VIN provided)
+print("Original Response:")
 print(response_vin.text)
 
-# Block model response that includes US Vehicle Identification Number (VIN)
+print("\n--- Running DLP Block Guard ---")
+
 deidentify_with_replace_infotype(
-    project=PROJECT_ID,
-    item=response_vin.text,
+    project=PROJECT_ID, 
+    item=response_vin.text, 
     info_types=["US_VEHICLE_IDENTIFICATION_NUMBER"]
 )
 ```
 
 
-
-
-
-
-
- ### Run the following Commands in  Notebook Terminal
-
-```
-rm deidentify-model-response-challenge-lab-v1.0.0.ipynb
-
-curl -LO https://raw.githubusercontent.com/chayandeokar/Cloud-Skills-2025/refs/heads/master/Discover%20and%20Protect%20Sensitive%20Data%20Across%20Your%20Ecosystem%3A%20Challenge%20Lab/deidentify-model-response-challenge-lab-v1.0.0.ipynb
-```
 ### Congratulations !!!!
 
 <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px;">
