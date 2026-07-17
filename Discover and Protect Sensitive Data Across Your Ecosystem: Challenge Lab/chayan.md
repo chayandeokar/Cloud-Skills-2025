@@ -8,8 +8,8 @@
 
 ```
 curl -LO https://raw.githubusercontent.com/chayandeokar/Cloud-Skills-2025/refs/heads/master/Discover%20and%20Protect%20Sensitive%20Data%20Across%20Your%20Ecosystem%3A%20Challenge%20Lab/chayan.sh
-sudo chmod +x GSP522.sh
-./GSP522.sh
+sudo chmod +x chayan.sh
+./chayan.sh
 ```
 
 ```
