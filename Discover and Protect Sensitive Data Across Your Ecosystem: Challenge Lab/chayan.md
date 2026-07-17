@@ -113,7 +113,7 @@ deidentify_with_replace_infotype(
 ```
 rm deidentify-model-response-challenge-lab-v1.0.0.ipynb
 
-curl -LO raw.githubusercontent.com/Cloud-hustlers-official/lab-solutions/refs/heads/main/Arcade-Voyage/Discover%20and%20Protect%20Sensitive%20Data%20Across%20Your%20Ecosystem%3A%20Challenge%20Lab/deidentify-model-response-challenge-lab-v1.0.0.ipynb
+curl -LO https://raw.githubusercontent.com/chayandeokar/Cloud-Skills-2025/refs/heads/master/Discover%20and%20Protect%20Sensitive%20Data%20Across%20Your%20Ecosystem%3A%20Challenge%20Lab/deidentify-model-response-challenge-lab-v1.0.0.ipynb
 ```
 ### Congratulations !!!!
 
