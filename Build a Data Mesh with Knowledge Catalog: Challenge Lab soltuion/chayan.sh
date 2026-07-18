@@ -49,10 +49,11 @@ gcloud dataplex assets create customer-orders \
   --resource-name=projects/$PROJECT_ID/datasets/customer_orders \
   --discovery-enabled
 
+echo "${GREEN_TEXT}${BOLD_TEXT}All Assets Created Successfully${RESET_FORMAT}"
+echo
 
-
-
-Complete Task 2 Manually 
+echo "${ORANGE_TEXT}${BOLD_TEXT}Complete Task 2 Manually (Aspects)${RESET_FORMAT}"
+read -p "Press Enter when done: "
 
 read -p "Enter User 2 email: " USER_2
 
