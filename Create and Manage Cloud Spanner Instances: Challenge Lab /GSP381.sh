@@ -134,8 +134,8 @@ gsutil mb gs://$DEVSHELL_PROJECT_ID
 
 # Create placeholder file
 echo "${CYAN}${BOLD}Creating placeholder files${RESET}"
-touch drabhishektutorial
-gsutil cp drabhishektutorial gs://$DEVSHELL_PROJECT_ID/tmp/drabhishektutorial
+touch chayan
+gsutil cp chayan gs://$DEVSHELL_PROJECT_ID/tmp/chayan
 
 # Upload files to GCS
 echo "${CYAN}${BOLD}Uploading files to Cloud Storage${RESET}"
@@ -148,7 +148,7 @@ sleep 100
 
 # Run Dataflow job
 echo "${CYAN}${BOLD}Running Dataflow import job${RESET}"
-gcloud dataflow jobs run drabhishektutorial \
+gcloud dataflow jobs run chayan \
   --gcs-location gs://dataflow-templates-"$REGION"/latest/GCS_Text_to_Cloud_Spanner \
   --region="$REGION" \
   --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
